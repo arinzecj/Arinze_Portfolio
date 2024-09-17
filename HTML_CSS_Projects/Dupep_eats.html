@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insta Bites - Restaurant Menu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fafafa;
+            color: #262626;
+        }
+        .container {
+            max-width: 935px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 28px;
+        }
+        .menu-item {
+            background-color: #fff;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .menu-item:hover {
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transform: translateY(-5px);
+        }
+        .menu-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        .menu-item-info {
+            padding: 12px;
+        }
+        .menu-item-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .menu-item-price {
+            color: #8e8e8e;
+            margin-bottom: 10px;
+        }
+        .menu-item-description {
+            font-size: 0.9rem;
+            color: #262626;
+        }
+        .like-button {
+            background: none;
+            border: none;
+            color: #262626;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .like-button.liked {
+            color: #ed4956;
+        }
+        @media (max-width: 768px) {
+            .menu-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Insta Bites</h1>
+            <p>Delicious food, picture-perfect presentation</p>
+        </header>
+        <div class="menu-grid" id="menuGrid">
+            <!-- Menu items will be dynamically added here -->
+        </div>
+    </div>
+
+    <script>
+        const menuItems = [
+            {
+                name: "Jellof Rice and Chicken",
+                price: "$12.99",
+                description: "Firewood prepared  jellof rice to give you that party feeling and garnished with BBQ Chicken",
+                image: "/HTML_CSS_Pojects/img/jellof.jpg"
+            },
+            {
+                name: "Jellof spag and Fish",
+                price: "$14.99",
+                description: "Seafood jellof spag soaked in the fish and soya sauce to give you that taste of the sea",
+                image: "/HTML_CSS_Pojects/img/jellofspag.png"
+            },
+            {
+                name: "Truffle Mushroom Pasta",
+                price: "$18.99",
+                description: "Al dente fettuccine tossed in a creamy truffle sauce with sautéed wild mushrooms and fresh herbs.",
+                image: "/api/placeholder/250/250?text=Mushroom+Pasta"
+            },
+            {
+                name: "Salmon Poke Bowl",
+                price: "$16.99",
+                description: "Cubed sushi-grade salmon served over brown rice with edamame, cucumber, and avocado, drizzled with spicy mayo.",
+                image: "/api/placeholder/250/250?text=Poke+Bowl"
+            },
+            {
+                name: "Matcha Latte",
+                price: "$5.99",
+                description: "Premium grade matcha green tea whisked to perfection with steamed milk of your choice.",
+                image: "/api/placeholder/250/250?text=Matcha+Latte"
+            },
+            {
+                name: "Unicorn Frappuccino",
+                price: "$6.99",
+                description: "A magical blend of pink and blue cream frappuccino, topped with whipped cream and edible glitter.",
+                image: "/api/placeholder/250/250?text=Unicorn+Frappuccino"
+            }
+        ];
+
+        const menuGrid = document.getElementById('menuGrid');
+
+        menuItems.forEach(item => {
+            const menuItem = document.createElement('div');
+            menuItem.className = 'menu-item';
+            menuItem.innerHTML = `
+                <img src="${item.image}" alt="${item.name}">
+                <div class="menu-item-info">
+                    <div class="menu-item-name">${item.name}</div>
+                    <div class="menu-item-price">${item.price}</div>
+                    <div class="menu-item-description">${item.description}</div>
+                    <button class="like-button">♥</button>
+                </div>
+            `;
+            menuGrid.appendChild(menuItem);
+        });
+
+        document.querySelectorAll('.like-button').forEach(button => {
+            button.addEventListener('click', function() {
+                this.classList.toggle('liked');
+            });
+        });
+    </script>
+</body>
+</html>

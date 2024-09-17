@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Nigeria - Travel Blog</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header {
+            background-color: #008751;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 0.5rem;
+        }
+        .slider-container {
+            position: relative;
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+        .slider {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        .slide {
+            min-width: 100%;
+            position: relative;
+            cursor: pointer;
+        }
+        .slide img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+        .slide-caption {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            padding: 10px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .prev { left: 10px; }
+        .next { right: 10px; }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 700px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover { color: #000; }
+        .modal-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Explore Nigeria</h1>
+            <p>Discover the beauty and diversity of Nigeria's top travel destinations</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="slider-container">
+            <div class="slider" id="slider">
+                <!-- Slides will be dynamically added here -->
+            </div>
+            <a href="#" class="prev" onclick="changeSlide(-1)">&#10094;</a>
+            <a href="#" class="next" onclick="changeSlide(1)">&#10095;</a>
+        </div>
+    </main>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <img id="modalImage" class="modal-image" src="" alt="">
+            <h2 id="modalTitle"></h2>
+            <p id="modalDescription"></p>
+        </div>
+    </div>
+
+    <script>
+        const destinations = [
+            {
+                name: "Zuma Rock, Abuja",
+                image: "/api/placeholder/800/400?text=Zuma+Rock",
+                description: "Zuma Rock is a large monolith located in Niger State, near Nigeria's capital city Abuja. It's often called the 'Gateway to Abuja' and is featured on the 100 Naira note."
+            },
+            {
+                name: "Obudu Cattle Ranch, Cross River State",
+                image: "/api/placeholder/800/400?text=Obudu+Cattle+Ranch",
+                description: "Obudu Cattle Ranch, also known as Obudu Mountain Resort, is a ranch and resort on the Obudu Plateau in Cross River State. It's famous for its temperate climate and beautiful mountain views."
+            },
+            {
+                name: "Yankari National Park, Bauchi State",
+                image: "/api/placeholder/800/400?text=Yankari+National+Park",
+                description: "Yankari National Park is a large wildlife park located in Bauchi State, northeastern Nigeria. It's home to several natural warm water springs and provides a haven for over 50 mammal species."
+            },
+            {
+                name: "Lekki Conservation Centre, Lagos",
+                image: "/api/placeholder/800/400?text=Lekki+Conservation+Centre",
+                description: "The Lekki Conservation Centre is a nature reserve located in Lekki, Lagos. It features a 401-meter long canopy walkway, the longest in Africa, offering stunning views of the nature reserve."
+            },
+            {
+                name: "Olumo Rock, Abeokuta",
+                image: "/api/placeholder/800/400?text=Olumo+Rock",
+                description: "Olumo Rock is a massive outcrop of granite rocks located in Abeokuta, Ogun State. It served as a natural fortress for the Egba people during inter-tribal warfare in the 19th century."
+            }
+        ];
+
+        let currentSlide = 0;
+        const slider = document.getElementById('slider');
+        const modal = document.getElementById('modal');
+        const modalImage = document.getElementById('modalImage');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDescription = document.getElementById('modalDescription');
+
+        // Populate slider with destinations
+        destinations.forEach((dest, index) => {
+            const slide = document.createElement('div');
+            slide.className = 'slide';
+            slide.innerHTML = `
+                <img src="${dest.image}" alt="${dest.name}">
+                <div class="slide-caption">${dest.name}</div>
+            `;
+            slide.onclick = () => openModal(index);
+            slider.appendChild(slide);
+        });
+
+        function changeSlide(n) {
+            currentSlide += n;
+            if (currentSlide >= destinations.length) currentSlide = 0;
+            if (currentSlide < 0) currentSlide = destinations.length - 1;
+            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        function openModal(index) {
+            const dest = destinations[index];
+            modalImage.src = dest.image;
+            modalTitle.textContent = dest.name;
+            modalDescription.textContent = dest.description;
+            modal.style.display = "block";
+        }
+
+        // Close modal when clicking on <span> (x)
+        document.getElementsByClassName("close")[0].onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
